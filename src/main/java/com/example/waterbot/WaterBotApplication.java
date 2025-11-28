@@ -12,7 +12,7 @@ public class WaterBotApplication {
     private static final Logger log = LoggerFactory.getLogger(WaterBotApplication.class);
 
     public static void main(String[] args) {
-        String token = Config.env("BOT_TOKEN", "");
+        String token = Config.env("BOT_TOKEN", "8191373714:AAEL9MtEaMfDOIRib65DJM7QAcyBWz4vjF4");
         String username = Config.env("BOT_USERNAME", "ZhivayaVodaa_bot");
         String dbFile = Config.env("DB_FILE", "bot.db");
         String mediaDir = Config.env("MEDIA_DIR", "media");

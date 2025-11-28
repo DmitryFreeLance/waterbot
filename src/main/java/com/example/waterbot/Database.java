@@ -170,7 +170,7 @@ public class Database implements AutoCloseable {
     }
 
     /**
-     * Логирование нажатия callback‑кнопки.
+     * Логирование нажатия callback-кнопки.
      */
     public void saveCallbackUsage(long chatId, String callbackData, long nowMillis) {
         String sql = "INSERT INTO callback_log (chat_id, callback_data, created_at) VALUES (?, ?, ?)";
