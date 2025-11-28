@@ -245,16 +245,16 @@ public class WaterBot extends TelegramLongPollingBot {
         sendPhoto(chatId, "2.jpg", Content.WATER_FACTS_1, false);
 
         // (1.mp4) + текст
-        sendVideo(chatId, "1.mp4", Content.WATER_FACTS_BLOOD_VIDEO_TEXT, false);
+        sendVideo(chatId, "1.MP4", Content.WATER_FACTS_BLOOD_VIDEO_TEXT, false);
 
         // (2.jpg / у тебя 3.jpg) + текст
         sendPhoto(chatId, "3.jpg", Content.WATER_FACTS_2, false);
 
         // (2.mp4) + текст
-        sendVideo(chatId, "2.mp4", Content.WATER_FACTS_3_VIDEO_TEXT, false);
+        sendVideo(chatId, "2.MP4", Content.WATER_FACTS_3_VIDEO_TEXT, false);
 
         // (4.mp4) без текста, с кнопкой "Домик"
-        sendVideo(chatId, "4.mp4", null, true);
+        sendVideo(chatId, "4.MP4", null, true);
     }
 
     private void send46Reasons(long chatId) throws TelegramApiException {
@@ -264,16 +264,16 @@ public class WaterBot extends TelegramLongPollingBot {
 
     private void sendDehydration(long chatId) throws TelegramApiException {
         // (5.mp4) + большой текст
-        sendVideo(chatId, "5.mp4", Content.DEHYDRATION_DISEASES_VIDEO_5_TEXT, false);
+        sendVideo(chatId, "5.MP4", Content.DEHYDRATION_DISEASES_VIDEO_5_TEXT, false);
 
         // (6.mp4) + текст
-        sendVideo(chatId, "6.mp4", Content.DEHYDRATION_DISEASES_VIDEO_6_TEXT, false);
+        sendVideo(chatId, "6.MP4", Content.DEHYDRATION_DISEASES_VIDEO_6_TEXT, false);
 
         // (5.jpg) + "Пройдите тест"
         sendPhoto(chatId, "5.jpg", Content.DEHYDRATION_DISEASES_QUIZ_TEXT, false);
 
         // (7.mp4) + кнопка "Домик"
-        sendVideo(chatId, "7.mp4", null, true);
+        sendVideo(chatId, "7.MP4", null, true);
     }
 
     private void sendQualityFull(long chatId) throws TelegramApiException {
@@ -284,7 +284,7 @@ public class WaterBot extends TelegramLongPollingBot {
         sendPhoto(chatId, "6.jpg", Content.QUALITY_6_PARAMS, false);
 
         // (8.mp4) + про воду из-под крана
-        sendVideo(chatId, "8.mp4", Content.QUALITY_TAP_WATER_TEXT, false);
+        sendVideo(chatId, "8.MP4", Content.QUALITY_TAP_WATER_TEXT, false);
 
         // Следующее сообщение (только текст)
         sendText(chatId, Content.QUALITY_NEXT_1, false);
@@ -311,7 +311,7 @@ public class WaterBot extends TelegramLongPollingBot {
         sendText(chatId, Content.QUALITY_NEXT_3, false);
 
         // (9.mp4) + текст про фильм
-        sendVideo(chatId, "9.mp4", Content.QUALITY_VIDEO_9_TEXT, false);
+        sendVideo(chatId, "9.MP4", Content.QUALITY_VIDEO_9_TEXT, false);
 
         // Следующее сообщение (только текст)
         sendText(chatId, Content.QUALITY_NEXT_4, false);
@@ -329,8 +329,8 @@ public class WaterBot extends TelegramLongPollingBot {
         sendPhoto(chatId, "15.jpg", Content.QUALITY_OVP_TEXT, false);
 
         // (10.mp4), (11.mp4) — последняя с кнопкой "Домик"
-        sendVideo(chatId, "10.mp4", null, false);
-        sendVideo(chatId, "11.mp4", null, true);
+        sendVideo(chatId, "10.MP4", null, false);
+        sendVideo(chatId, "11.MP4", null, true);
     }
 
     private void sendLiveWater(long chatId) throws TelegramApiException {
@@ -345,7 +345,7 @@ public class WaterBot extends TelegramLongPollingBot {
         safeExecute(linkMsg);
 
         // (12.mp4) + текст про соду
-        sendVideo(chatId, "12.mp4", Content.LIVE_WATER_SODA_VIDEO_TEXT, true);
+        sendVideo(chatId, "12.MP4", Content.LIVE_WATER_SODA_VIDEO_TEXT, true);
     }
 
     private void sendPromo(long chatId) throws TelegramApiException {
@@ -355,7 +355,7 @@ public class WaterBot extends TelegramLongPollingBot {
 
     private void sendQualityShort(long chatId) throws TelegramApiException {
         // (14.mp4) + текст + кнопка "Домик"
-        sendVideo(chatId, "14.mp4", Content.QUALITY_SHORT_ESSE_TEXT, true);
+        sendVideo(chatId, "14.MP4", Content.QUALITY_SHORT_ESSE_TEXT, true);
     }
 
     private void sendHealthForm(long chatId) throws TelegramApiException {
