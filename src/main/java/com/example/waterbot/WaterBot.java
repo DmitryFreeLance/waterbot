@@ -490,8 +490,6 @@ public class WaterBot extends TelegramLongPollingBot {
         photo.setChatId(Long.toString(chatId));
         if (captionFirst != null && !captionFirst.isBlank()) {
             photo.setCaption(captionFirst);
-        }
-        if (html) {
             photo.setParseMode(ParseMode.HTML);
         }
 
