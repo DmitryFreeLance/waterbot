@@ -30,6 +30,7 @@ public class WaterBot extends TelegramLongPollingBot {
     private static final long MESSAGE_DELAY_MS = 2000L;
 
     // callback data
+    private static final String CB_FULL_CLEANSE = "MENU_10_FULL_CLEANSE";
     private static final String CB_WATER_FACTS = "MENU_1_WATER_FACTS";
     private static final String CB_46_REASONS = "MENU_2_46_REASONS";
     private static final String CB_DEHYDRATION = "MENU_3_DEHYDRATION";
@@ -148,6 +149,7 @@ public class WaterBot extends TelegramLongPollingBot {
             case CB_PROMO -> sendPromo(chatId);
             case CB_HEALTH_FORM -> sendHealthForm(chatId);
             case CB_CONSULTATION -> sendConsultation(chatId);
+            case CB_FULL_CLEANSE -> sendFullCleanse(chatId);
             case CB_BACK_TO_MENU -> sendMainMenu(chatId);
             default -> {
                 SendMessage msg = new SendMessage();
@@ -157,6 +159,11 @@ public class WaterBot extends TelegramLongPollingBot {
                 safeExecute(msg);
             }
         }
+    }
+
+    private void sendFullCleanse(long chatId) throws TelegramApiException {
+        // одно видео + ваш текст + кнопка "Домик"
+        sendVideo(chatId, "41.MP4", Content.FULL_CLEANSE_TEXT, true);
     }
 
     // ------------- /start -------------
@@ -208,7 +215,10 @@ public class WaterBot extends TelegramLongPollingBot {
         rows.add(singleButtonRow("📊 Анкета по здоровью", CB_HEALTH_FORM));
         rows.add(singleButtonRow("📞 Записаться на консультацию", CB_CONSULTATION));
 
-        // последняя кнопка – переход в Telegram-канал (п.2)
+        // новая последняя кнопка раздела
+        rows.add(singleButtonRow("Полное очищение организма", CB_FULL_CLEANSE));
+
+        // последняя кнопка – переход в Telegram-канал
         InlineKeyboardButton channelButton = new InlineKeyboardButton();
         channelButton.setText("Мой TELEGRAM канал");
         channelButton.setUrl("https://t.me/+WKM0rsm0G9RkOTMy");
@@ -262,7 +272,7 @@ public class WaterBot extends TelegramLongPollingBot {
         sendVideo(chatId, "2.MP4", Content.WATER_FACTS_3_VIDEO_TEXT, false);
 
         // (4.mp4) без текста, с кнопкой "Домик"
-        sendVideo(chatId, "4.MP4", null, true);
+        sendVideo(chatId, "4.mp4", null, true);
     }
 
     private void send46Reasons(long chatId) throws TelegramApiException {
@@ -345,7 +355,7 @@ public class WaterBot extends TelegramLongPollingBot {
     }
 
     private void sendLiveWater(long chatId) throws TelegramApiException {
-        // HTML-текст, где каждое слово "вода" кликабельно и ведёт на нужный URL (п.3)
+        // HTML-текст, где каждое слово "вода" кликабельно и ведёт на нужный URL
         String html = linkifyWater(Content.LIVE_WATER_CORAL_MAIN_TEXT);
 
         // (16.jpg) + HTML-текст (с <b> и <a>)
@@ -357,8 +367,11 @@ public class WaterBot extends TelegramLongPollingBot {
         linkMsg.setText("Вода японских долгожителей:\nhttps://youtu.be/pO19EG5_fb0?si=IcPR4jQfRb8MQAx5");
         safeExecute(linkMsg);
 
-        // (12.mp4) + текст про соду, с кнопкой "Домик"
-        sendVideo(chatId, "12.MP4", Content.LIVE_WATER_SODA_VIDEO_TEXT, true);
+        // (12.MP4) + текст про соду, БЕЗ кнопки "Домик"
+        sendVideo(chatId, "12.MP4", Content.LIVE_WATER_SODA_VIDEO_TEXT, false);
+
+        // ПОСЛЕДНИМ сообщением — (40.MP4) + кнопка "Домик"
+        sendVideo(chatId, "40.MP4", null, true);
     }
 
     private void sendPromo(long chatId) throws TelegramApiException {
