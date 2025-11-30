@@ -272,7 +272,7 @@ public class WaterBot extends TelegramLongPollingBot {
         sendVideo(chatId, "2.MP4", Content.WATER_FACTS_3_VIDEO_TEXT, false);
 
         // (4.mp4) без текста, с кнопкой "Домик"
-        sendVideo(chatId, "4.mp4", null, true);
+        sendVideo(chatId, "4.MP4", null, true);
     }
 
     private void send46Reasons(long chatId) throws TelegramApiException {
