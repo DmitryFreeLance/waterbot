@@ -12,6 +12,9 @@ import org.telegram.telegrambots.meta.api.objects.*;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import java.io.File;
 import java.io.Serializable;
@@ -30,6 +33,7 @@ public class WaterBot extends TelegramLongPollingBot {
     private static final long MESSAGE_DELAY_MS = 2000L;
 
     // callback data
+    private static final String CB_ADMIN_PANEL = "MENU_ADMIN_PANEL";
     private static final String CB_FULL_CLEANSE = "MENU_10_FULL_CLEANSE";
     private static final String CB_WATER_FACTS = "MENU_1_WATER_FACTS";
     private static final String CB_46_REASONS = "MENU_2_46_REASONS";
@@ -48,6 +52,7 @@ public class WaterBot extends TelegramLongPollingBot {
     private final String mediaDir;
     private final Database database;
     private final long callbackSpamIntervalMs;
+    private final Set<Long> adminIds;
 
     public WaterBot(String botToken,
                     String botUsername,
@@ -59,6 +64,7 @@ public class WaterBot extends TelegramLongPollingBot {
         this.mediaDir = mediaDir;
         this.database = database;
         this.callbackSpamIntervalMs = callbackSpamIntervalMs;
+        this.adminIds = loadAdminIds();
     }
 
     @Override
@@ -79,12 +85,45 @@ public class WaterBot extends TelegramLongPollingBot {
         }
     }
 
+    private Set<Long> loadAdminIds() {
+        Set<Long> set = new HashSet<>();
+        String raw = Config.env("ADMIN_IDS", "").trim();
+        if (raw.isEmpty()) {
+            return set;
+        }
+        for (String part : raw.split(",")) {
+            String s = part.trim();
+            if (s.isEmpty()) {
+                continue;
+            }
+            try {
+                set.add(Long.parseLong(s));
+            } catch (NumberFormatException e) {
+                log.warn("Invalid admin id in ADMIN_IDS: {}", s);
+            }
+        }
+        return set;
+    }
+
+    private boolean isAdmin(long chatId) {
+        return adminIds.contains(chatId);
+    }
+
     private void handleMessage(Message message) throws TelegramApiException {
         if (!message.hasText()) {
             return;
         }
         String text = message.getText().trim();
         long chatId = message.getChatId();
+
+        if (text.startsWith("/send")) {
+            handleAdminSend(chatId, text);
+            return;
+        }
+        if ("/all".equals(text)) {
+            handleAdminAll(chatId);
+            return;
+        }
 
         if ("/start".equals(text)) {
             long now = System.currentTimeMillis();
@@ -111,9 +150,61 @@ public class WaterBot extends TelegramLongPollingBot {
             SendMessage msg = new SendMessage();
             msg.setChatId(Long.toString(chatId));
             msg.setText("Пожалуйста, воспользуйтесь меню ниже 👇");
-            msg.setReplyMarkup(mainMenuKeyboard());
+            msg.setReplyMarkup(mainMenuKeyboard(chatId));
             safeExecute(msg);
         }
+    }
+
+    private void handleAdminSend(long chatId, String text) throws TelegramApiException {
+        if (!isAdmin(chatId)) {
+            SendMessage msg = new SendMessage();
+            msg.setChatId(Long.toString(chatId));
+            msg.setText("Эта команда доступна только администраторам.");
+            safeExecute(msg);
+            return;
+        }
+
+        String payload = text.length() > 5 ? text.substring(5).trim() : "";
+        if (payload.isEmpty()) {
+            SendMessage msg = new SendMessage();
+            msg.setChatId(Long.toString(chatId));
+            msg.setText("Используйте: /send ваш текст для рассылки");
+            safeExecute(msg);
+            return;
+        }
+
+        List<Long> recipients = database.getAllActiveChatIds();
+        int sent = 0;
+        for (Long id : recipients) {
+            if (id == null) continue;
+            SendMessage out = new SendMessage();
+            out.setChatId(Long.toString(id));
+            out.setText(payload);
+            out.setParseMode(ParseMode.HTML);
+            safeExecute(out);
+            sent++;
+        }
+
+        SendMessage done = new SendMessage();
+        done.setChatId(Long.toString(chatId));
+        done.setText("Рассылка отправлена " + sent + " пользователям.");
+        safeExecute(done);
+    }
+
+    private void handleAdminAll(long chatId) throws TelegramApiException {
+        if (!isAdmin(chatId)) {
+            SendMessage msg = new SendMessage();
+            msg.setChatId(Long.toString(chatId));
+            msg.setText("Эта команда доступна только администраторам.");
+            safeExecute(msg);
+            return;
+        }
+
+        int count = database.countActiveUsers();
+        SendMessage msg = new SendMessage();
+        msg.setChatId(Long.toString(chatId));
+        msg.setText("Активных пользователей в боте: " + count);
+        safeExecute(msg);
     }
 
     private void handleCallback(CallbackQuery callbackQuery) throws TelegramApiException {
@@ -150,15 +241,40 @@ public class WaterBot extends TelegramLongPollingBot {
             case CB_HEALTH_FORM -> sendHealthForm(chatId);
             case CB_CONSULTATION -> sendConsultation(chatId);
             case CB_FULL_CLEANSE -> sendFullCleanse(chatId);
+            case CB_ADMIN_PANEL -> sendAdminPanel(chatId);
             case CB_BACK_TO_MENU -> sendMainMenu(chatId);
             default -> {
                 SendMessage msg = new SendMessage();
                 msg.setChatId(Long.toString(chatId));
                 msg.setText("Неизвестная команда. Показываю меню 👇");
-                msg.setReplyMarkup(mainMenuKeyboard());
+                msg.setReplyMarkup(mainMenuKeyboard(chatId));
                 safeExecute(msg);
             }
         }
+    }
+
+    private void sendAdminPanel(long chatId) throws TelegramApiException {
+        if (!isAdmin(chatId)) {
+            SendMessage msg = new SendMessage();
+            msg.setChatId(Long.toString(chatId));
+            msg.setText("Эта панель доступна только администраторам.");
+            safeExecute(msg);
+            return;
+        }
+
+        String text = """
+                ⚙️ <b>Админ панель</b>
+                
+                /send &lt;текст&gt; — отправить мгновенную рассылку всем активным пользователям.
+                /all — показать количество активных пользователей.
+                """;
+
+        SendMessage msg = new SendMessage();
+        msg.setChatId(Long.toString(chatId));
+        msg.setText(text);
+        msg.setParseMode(ParseMode.HTML);
+        msg.setReplyMarkup(backToMenuKeyboard());
+        safeExecute(msg);
     }
 
     private void sendFullCleanse(long chatId) throws TelegramApiException {
@@ -177,7 +293,7 @@ public class WaterBot extends TelegramLongPollingBot {
         photo.setChatId(Long.toString(chatId));
         photo.setCaption(Content.START_TEXT);
         photo.setParseMode(ParseMode.HTML);
-        photo.setReplyMarkup(mainMenuKeyboard());
+        photo.setReplyMarkup(mainMenuKeyboard(chatId));
 
         String cachedId = database.getMediaFileId(cacheKey);
         if (cachedId != null) {
@@ -203,7 +319,7 @@ public class WaterBot extends TelegramLongPollingBot {
         sendStartFirstTime(chatId);
     }
 
-    private InlineKeyboardMarkup mainMenuKeyboard() {
+    private InlineKeyboardMarkup mainMenuKeyboard(long chatId) {
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
 
         rows.add(singleButtonRow("💧 Вода. Интересные факты", CB_WATER_FACTS));
@@ -225,6 +341,10 @@ public class WaterBot extends TelegramLongPollingBot {
         List<InlineKeyboardButton> channelRow = new ArrayList<>();
         channelRow.add(channelButton);
         rows.add(channelRow);
+
+        if (isAdmin(chatId)) {
+            rows.add(singleButtonRow("⚙️ Админ панель", CB_ADMIN_PANEL));
+        }
 
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
         markup.setKeyboard(rows);

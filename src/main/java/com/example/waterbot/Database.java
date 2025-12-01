@@ -2,6 +2,8 @@ package com.example.waterbot;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.ArrayList;
+import java.util.List;
 
 import java.sql.*;
 
@@ -224,6 +226,43 @@ public class Database implements AutoCloseable {
         } catch (SQLException e) {
             log.error("Error in saveMediaFileId", e);
         }
+    }
+
+    /**
+     * Количество "активных" пользователей (is_blocked = 0).
+     */
+    public int countActiveUsers() {
+        String sql = "SELECT COUNT(*) FROM users WHERE is_blocked = 0";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            log.error("Error in countActiveUsers", e);
+        }
+        return 0;
+    }
+
+    /**
+     * Список chat_id всех активных пользователей.
+     */
+    public List<Long> getAllActiveChatIds() {
+        List<Long> result = new ArrayList<>();
+        String sql = "SELECT chat_id FROM users WHERE is_blocked = 0";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                result.add(rs.getLong(1));
+            }
+        } catch (SQLException e) {
+            log.error("Error in getAllActiveChatIds", e);
+        }
+        return result;
     }
 
     @Override
