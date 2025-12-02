@@ -337,7 +337,7 @@ public class WaterBot extends TelegramLongPollingBot {
         // последняя кнопка – переход в Telegram-канал
         InlineKeyboardButton channelButton = new InlineKeyboardButton();
         channelButton.setText("Мой TELEGRAM канал");
-        channelButton.setUrl("https://t.me/+WKM0rsm0G9RkOTMy");
+        channelButton.setUrl("https://t.me/coralclubmzk");
         List<InlineKeyboardButton> channelRow = new ArrayList<>();
         channelRow.add(channelButton);
         rows.add(channelRow);
