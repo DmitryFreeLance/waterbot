@@ -727,7 +727,8 @@ public class WaterBot extends TelegramLongPollingBot {
 
     private String linkifyWater(String text) {
         // заменяем слово "вода" (в любом регистре) на ссылку
-        return "";
+        return text.replaceAll("(?i)\\bвода\\b",
+                "вода");
     }
 
     // универсальный safeExecute для BotApiMethod
