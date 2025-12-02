@@ -602,7 +602,7 @@ public final class Content {
     public static final String PROMO_TEXT = """
             Промокод на скидку 20% + CASHBACK:
             
-            https://ru.coral.club/shop/koral-mayn-silver.html?offer=2200&REF_CODE=365272872010
+            https://coral.club/4940880.html
             """;
 
     // 6 кнопка) КАЧЕСТВО ВОДЫ (Ессентуки)
