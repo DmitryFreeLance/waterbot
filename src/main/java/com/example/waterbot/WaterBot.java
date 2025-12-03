@@ -331,14 +331,6 @@ public class WaterBot extends TelegramLongPollingBot {
         rows.add(singleButtonRow("📊 Анкета по здоровью", CB_HEALTH_FORM));
         rows.add(singleButtonRow("📞 Записаться на консультацию", CB_CONSULTATION));
 
-        // последняя кнопка – переход в Telegram-канал
-        InlineKeyboardButton channelButton = new InlineKeyboardButton();
-        channelButton.setText("Мой TELEGRAM канал");
-        channelButton.setUrl("https://t.me/coralclubmzk");
-        List<InlineKeyboardButton> channelRow = new ArrayList<>();
-        channelRow.add(channelButton);
-        rows.add(channelRow);
-
         if (isAdmin(chatId)) {
             rows.add(singleButtonRow("⚙️ Админ панель", CB_ADMIN_PANEL));
         }
