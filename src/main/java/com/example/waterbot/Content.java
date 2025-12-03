@@ -29,6 +29,23 @@ public final class Content {
             У меня 5000+ благодарных клиентов в 6 странах мира.
             """;
 
+    // в классе Content
+    public static final String LIVE_WATER_LAST_TEXT = """
+            Свершилось! 📣
+            
+            Исследование словенского института БИОН (BION Institute) о воздействии Coral-Mine на воду опубликовано в научном междисциплинарном журнале Water Journal. Издание объединяет исследования, посвященные воде 💦
+            
+            Поздравляем всех с важной вехой в жизни компании!💥
+            
+            🗞 <a href="https://waterjournal.org/volume-12/jerman/">Открыть журнал</a>
+            
+            <a href="https://waterjournal.org/volume-12/jerman/">Напоминаем,</a> что с адаптированным содержанием исследования вы можете ознакомиться здесь👇\s
+            
+            <a href="https://telegra.ph/KORAL-MAIN-CORAL-MINE-01-27">Исследование института BION</a>
+            
+            https://youtu.be/4-rW99wiOnA?si=FGFfb7ZD0tBT3jWa
+        """;
+
     // 1 кнопка) ВОДА. Интересные факты
     public static final String WATER_FACTS_1 = """
             За ночь, пока мы спим, наш организм очень активно трудится. Результаты его трудов мы видим утром на своем лице и на унитазе. 

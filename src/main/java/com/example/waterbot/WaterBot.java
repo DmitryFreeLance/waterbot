@@ -488,7 +488,9 @@ public class WaterBot extends TelegramLongPollingBot {
         sendVideo(chatId, "12.MP4", Content.LIVE_WATER_SODA_VIDEO_TEXT, false);
 
         // ПОСЛЕДНИМ сообщением — (40.MP4) + кнопка "Домик"
-        sendVideo(chatId, "40.MP4", null, true);
+        sendVideo(chatId, "40.MP4", null, false);
+
+        sendPhoto(chatId, "44.jpg", Content.LIVE_WATER_LAST_TEXT, true);
     }
 
     private void sendPromo(long chatId) throws TelegramApiException {
