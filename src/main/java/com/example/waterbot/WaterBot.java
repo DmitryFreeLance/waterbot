@@ -328,7 +328,6 @@ public class WaterBot extends TelegramLongPollingBot {
         rows.add(singleButtonRow("🧪 Качество воды", CB_QUALITY_FULL));
         rows.add(singleButtonRow("🌿 Живая щелочная вода", CB_LIVE_WATER));
         rows.add(singleButtonRow("🎁 Промокод на 20%", CB_PROMO));
-        rows.add(singleButtonRow("📊 Анкета по здоровью", CB_HEALTH_FORM));
         rows.add(singleButtonRow("📞 Записаться на консультацию", CB_CONSULTATION));
 
         if (isAdmin(chatId)) {
